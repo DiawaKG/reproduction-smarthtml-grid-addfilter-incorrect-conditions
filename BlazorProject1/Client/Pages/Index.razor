@@ -2,21 +2,10 @@
 
 @using Smart.Blazor
 
-<PageTitle>Index</PageTitle>
 
-<h1>Hello, world!</h1>
+OnFilter the gird should save its state but for a simple contains filter it saves "[object Object]" instead of the filter
 
-Welcome to your new app.
-
-<SurveyPrompt Title="How is Blazor working for you?"/>
-
-<Button OnClick="@ClearFilters">clear filters</Button>
-<Button OnClick="@OrClicked">contains Andrew or contains Nancy</Button>
-<Button OnClick="@AndClicked">contains Andrew and contains Nancy</Button>
-
-
-
-<Grid @ref="grid" DataSource="@data" Filtering="@GridFiltering" Header="@GridHeader">
+<Grid @ref="grid1" DataSource="@data" OnFilter="StateUpdate" Filtering="@GridFiltering" Header="@GridHeader">
   <Columns>
     <Column DataField="Id" Visible="false" AllowEdit="false"/>
     <Column DataField="Name" Label="Name" AllowEdit="true"/>
@@ -29,7 +18,8 @@ Welcome to your new app.
 
 @code
 {
-  Grid grid;
+  Grid grid1;
+
   GridHeader GridHeader = new() { Visible = true, Buttons = new[] { "filter", "sort", "group", "search" } };
   GridFiltering GridFiltering = new() { Enabled = true };
   string checkBoxEditor = "checkBox";
@@ -45,19 +35,9 @@ Welcome to your new app.
     new ClassName() { Id = Guid.NewGuid(), BoolValue = true, Name = "Andrew Nancy", Value = "value7", Description = "lorem ipsum7" }
   };
 
-  
-  public async void ClearFilters()
+  private async Task StateUpdate(Event args)
   {
-    grid.ClearFilter();
+    grid1.SaveState();
   }
-  
-  public async void OrClicked()
-  {
-    grid.AddFilter(nameof(ClassName.Name), $"contains Andrew or contains Nancy");
-  }
-  
-  public async void AndClicked()
-  {
-    grid.AddFilter(nameof(ClassName.Name), $"contains Andrew and contains Nancy");
-  }
+
 }
